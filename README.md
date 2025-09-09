@@ -49,7 +49,7 @@ Enjoy the practice and iterate fast.
 
 ## Colab quickstart
 
-[Open in Colab](https://colab.research.google.com/github/DawitLam/pirn-decision-analytics/blob/main/notebooks/colab_starter.ipynb)
+[Open in Colab](https://colab.research.google.com/github/DawitLam/pirn-decision-analytics/blob/main/notebooks/colab_student.ipynb)
 
 1) Install minimal deps and clone the repo
 
