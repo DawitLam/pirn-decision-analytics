@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+
+# Virtual environments
+.venv/
+
+# Jupyter/VS Code
+.ipynb_checkpoints/
+.vscode/
+
+# Local data and outputs
+/data/
+!/data/.keep
+
+# Credentials
+.kaggle/
+
+# OS files
+.DS_Store
+Thumbs.db
