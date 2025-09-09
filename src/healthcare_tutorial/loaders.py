@@ -125,7 +125,7 @@ def _load_synthea(data_dir: str) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFra
     })
     # Age calc
     birth = patients_raw.get("BIRTHDATE")
-    if birth is not None is not False:
+    if birth is not None:
         # Map birthdate by PatientID order
         pat["_birth"] = birth.values
         # compute age by joining ref date per PatientID
@@ -155,9 +155,12 @@ def _load_synthea(data_dir: str) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFra
     # Keep rows with numeric results
     labs = labs.dropna(subset=["TestResultValue"]).reset_index(drop=True)
 
-    # Ensure dtypes
-    patients["PatientID"] = patients["PatientID"].astype(int)
-    adm["PatientID"] = adm["PatientID"].astype(int)
-    labs["PatientID"] = labs["PatientID"].astype(int)
+    # Ensure dtypes where present
+    if "PatientID" in patients.columns:
+        patients["PatientID"] = patients["PatientID"].astype(int)
+    if "PatientID" in adm.columns:
+        adm["PatientID"] = adm["PatientID"].astype(int)
+    if "PatientID" in labs.columns:
+        labs["PatientID"] = labs["PatientID"].astype(int)
 
     return patients, adm, labs

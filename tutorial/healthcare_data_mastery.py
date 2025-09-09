@@ -28,6 +28,9 @@ from healthcare_tutorial.analytics import (
     pediatric_analysis_by_age_group,
     calculate_clinical_flags,
 )
+from healthcare_tutorial.etl import simple_cleaning, build_star_schema, iqr_outlier_flags
+from healthcare_tutorial.ml_clean import knn_impute_numeric, build_cleaning_pipeline
+from healthcare_tutorial.viz import show_missing_matrix, plot_age_distribution, plot_los_by_site
 
 pd.set_option("display.max_columns", 100)
 pd.set_option("display.width", 120)
@@ -79,6 +82,9 @@ patients_dedup = patients.drop_duplicates(keep="first")
 if "AdmissionDate" in admissions.columns:
     admissions["AdmissionDate"] = pd.to_datetime(admissions["AdmissionDate"], errors="coerce")
 patients["Age_num"] = pd.to_numeric(patients["Age"], errors="coerce")
+
+# Optional quick visuals
+plot_age_distribution(patients, age_col="Age_num")
 
 #%%
 # Hour 3-4: Healthcare-Specific Validations
@@ -174,3 +180,33 @@ print(result.head())
 # Evening: Context Review — see README for bullets and key reminders.
 
 print("Tutorial complete. Explore cells above for each topic.")
+
+#%%
+# Day 2 — Advanced ETL and ML-based Cleaning (Bonus)
+# Simple cleaning: coerce numeric lab results and drop NA in key columns
+labs_clean = simple_cleaning(labs, dropna_cols=["PatientID", "TestResultValue"], numeric_coerce=["TestResultValue"])
+print("Labs cleaned shape:", labs_clean.shape)
+
+# Outlier flags on LengthOfStay (IQR method)
+if "LengthOfStay" in admissions.columns:
+    admissions["LoS_Outlier"] = iqr_outlier_flags(admissions["LengthOfStay"].astype(float))
+    print("LoS outliers:", int(admissions["LoS_Outlier"].sum()))
+
+# KNN imputation example on Age (demo only if any missing)
+if patients["Age"].isna().any():
+    patients = knn_impute_numeric(patients, cols=["Age"], n_neighbors=5)
+
+# Build star schema
+star = build_star_schema(patients, admissions, labs_clean)
+print({k: v.shape for k, v in star.items()})
+
+# Simple pipeline for cleaning (numeric/categorical)
+num_cols = [c for c in ["Age", "LengthOfStay"] if c in adm_enriched2.columns]
+cat_cols = [c for c in ["Gender", "HospitalSite", "DiagnosisName"] if c in adm_enriched2.columns]
+clean_pipe = build_cleaning_pipeline(numeric_features=num_cols, categorical_features=cat_cols)
+_ = clean_pipe.fit_transform(adm_enriched2[num_cols + cat_cols].copy())
+print("Cleaning pipeline applied (fit_transform).")
+
+# Viz: missingness and LOS by site
+show_missing_matrix(patients)
+plot_los_by_site(adm_enriched2)
