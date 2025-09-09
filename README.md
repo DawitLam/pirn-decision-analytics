@@ -49,6 +49,8 @@ Enjoy the practice and iterate fast.
 
 ## Colab quickstart
 
+[Open in Colab](https://colab.research.google.com/github/DawitLam/pirn-decision-analytics/blob/main/notebooks/colab_starter.ipynb)
+
 1) Install minimal deps and clone the repo
 
 ```python
@@ -68,3 +70,5 @@ import sys, os; sys.path.insert(0, os.path.join(os.getcwd(), "src"))
 ```python
 !python tutorial/healthcare_data_mastery.py
 ```
+
+Or use the notebook at `notebooks/colab_starter.ipynb` to install deps, clone, and run the tutorial and exercises in one place.
