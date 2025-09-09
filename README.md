@@ -1,5 +1,7 @@
 # Healthcare Data Mastery – Interactive Tutorial
 
+Interactive pediatric healthcare analytics with Pandas, SQL, and data quality checks. Runs locally or on Colab; uses synthetic data by default and auto-loads Synthea CSVs from data/.
+
 A hands-on, two-day practice guide for pediatric healthcare data using Pandas and SQL. This repo includes an interactive Python script with notebook-style cells, supporting utilities, and example SQL queries.
 
 ## What’s inside
@@ -44,3 +46,25 @@ Place CSV files in a new `data/` folder and adjust the "Load your dataset" cell 
 - Document assumptions briefly in comments.
 
 Enjoy the practice and iterate fast.
+
+## Colab quickstart
+
+1) Install minimal deps and clone the repo
+
+```python
+%pip -q install pandas numpy missingno pyarrow
+!git clone https://github.com/<your-username>/<repo>.git
+%cd /content/<repo>
+import sys, os; sys.path.insert(0, os.path.join(os.getcwd(), "src"))
+```
+
+2) Add data (optional)
+
+- Upload CSVs into `/content/<repo>/data/`:
+	- patients.csv, admissions.csv, labs.csv; or Synthea Patients.csv, Encounters.csv, Observations.csv
+
+3) Run the tutorial
+
+```python
+!python tutorial/healthcare_data_mastery.py
+```
